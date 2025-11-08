@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin Dashboard</title>
+<style>
+body { font-family: Arial; padding:20px;}
+table { width:100%; border-collapse:collapse;}
+th, td { padding:10px; border:1px solid #ddd;}
+th { background:#007bff; color:white;}
+.logout { background:red; color:white; padding:8px; border:none; cursor:pointer;}
+</style>
+</head>
+<body>
+
+<h2>Student Data Dashboard</h2>
+<button class="logout" onclick="logout()">Logout</button>
+<br><br>
+
+<table>
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Enrollment</th>
+            <th>CGPA</th>
+        </tr>
+    </thead>
+    <tbody id="dataTable"></tbody>
+</table>
+
+<script>
+if (localStorage.getItem("auth") !== "true") {
+    window.location.href = "login.html";
+}
+
+async function loadData() {
+    const response = await fetch("https://cgpa-project-fqwv.onrender.com/getData");
+    const data = await response.json();
+
+    document.getElementById("dataTable").innerHTML = data
+        .map(row => `<tr><td>${row.id}</td><td>${row.name}</td><td>${row.enrollment}</td><td>${row.cgpa}</td></tr>`)
+        .join("");
+}
+
+function logout() {
+    localStorage.removeItem("auth");
+    window.location.href = "login.html";
+}
+
+loadData();
+</script>
+
+</body>
+</html>
